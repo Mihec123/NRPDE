@@ -3,7 +3,7 @@ function [U,X,Y,A,B] = resiPoissonDif(a,b,c,d,F,Gab,Gcd,Gac,Gbd,J,K)
 %   resiPoissonDif z uporabo diferencne metode resi Poissonovo enacbo
 %   na pravokotniku pri Dirichletovih robnih pogojih
 %   a,b,c,d parametri ki dolocajo pravokotnik
-%   Gab,Gcd funkciji ki dolocata robne pogoje v x smeri
+%   Gab,Gcd funkciji ki dolocata robne pogoje v x smeri 
 
 U = zeros(J+2,K+2);
 B=U;
