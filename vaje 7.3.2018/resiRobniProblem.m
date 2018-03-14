@@ -1,4 +1,4 @@
-function [y,x] = resiRobniProblem(a,b,p,q,r,alpha,beta,n)
+function [y,x,S] = resiRobniProblem(a,b,p,q,r,alpha,beta,n)
 %resujemo enacbo -(p(x)y)' + q(x)y = r(x) z operatorejm iz vaj na x \in (a,b)
 %h = (b-a)/h;, kjer je y(a) = alpha,y(b) = beta iscemo za tocke 
 %i=1,...,n-1
@@ -37,7 +37,12 @@ end
 for i=1:n-2
     naddiag(i) = -pf(i+1);
 end
-M = diag(diagonala) + diag(naddiag,1) + diag(poddiag,-1);
+B = zeros(n-1,3);
+B(:,2) = diagonala;
+B(1:end-1,1) = poddiag;
+B(2:end,3) = naddiag; 
+S = spdiags(B,[-1,0,1],n-1,n-1);
+%M = diag(diagonala) + diag(naddiag,1) + diag(poddiag,-1);
 
 b = zeros(n-1,1);
 
@@ -47,8 +52,8 @@ end
 
 b(1) = b(1) +pf(1)*alpha;
 b(n-1) = b(n-1) + pf(n)*beta;
-y1 = M\b;
-
+%y1 = M\b;
+y1 = S\b;
 y(1) = alpha;
 y(n+1) = beta;
 y(2:n) = y1;
