@@ -1,12 +1,34 @@
-function [U,X,Y,A,B] = resiPoissonDif(a,b,c,d,F,Gab,Gcd,Gac,Gbd,J,K)
-%Opis:
-%   resiPoissonDif z uporabo diferencne metode resi Poissonovo enacbo
-%   na pravokotniku pri Dirichletovih robnih pogojih
-%   a,b,c,d parametri ki dolocajo pravokotnik
-%   Gab,Gcd funkciji ki dolocata robne pogoje v x smeri 
+function [U,X,Y,A,B] = resiPoissonDif(a,b,c,d,F,Gc,Gd,Ga,Gb,J,K)
+% Opis:
+%  resiPoissonDif z uporabo diferencne metode resi Poissonovo enacbo na
+%  pravokotniku pri Dirichletovih robnih pogojih
+%
+% Definicija:
+%  [U,X,Y,A,B] = resiPoissonDif(a,b,c,d,F,Gc,Gd,Ga,Gb,J,K)
+%
+% Vhodni podatki:
+%  a,b,c,d  parametri, ki dolocajo pravokotnik [a,b] x [c,d],
+%  F        funkcija, ki doloca Poissonovo enacbo - laplace U = F,
+%  Gc,Gd    funkciji, ki dolocata robne pogoje v x smeri:
+%           U(x,c) = Gc(x), U(x,d) = Gd(x)
+%  Ga,Gb    funkciji, ki dolocata robne pogoje v y smeri:
+%           U(a,y) = Ga(y), U(b,y) = Gb(y)
+%  J,K      parametra diskretizacije pri diferencni metodi, ki dolocata
+%           stevilo notranjih tock mreze v x oziroma y smeri
+%
+% Izhodni podatki:
+%  U        tabela velikosti (J+2) x (K+2), ki predstavlja numericno
+%           resitev Poissonove enacbe - laplace U = F pri danih robnih
+%           pogojih,
+%  X,Y      tabeli velikosti (J+2) x (K+2), ki vsebujeta x in y koordinate
+%           tock mreze, na kateri se izvede diferencna metoda (vrednost
+%           U(j,k) torej predstavlja numericni priblizek za resitev
+%           Poissonove enacbe v tocki (X(j,k), Y(j,k)),
+%  A,B      matrika in vektor sistema A*x = B, katerega resitev doloca
+%           numericne priblizke v notranjih tockah mreze (A in B sta v
+%           razprseni obliki)
 
 U = zeros(J+2,K+2);
-B=U;
 hx = (b-a)/(J+1)
 hy = (d-c)/(K+1)
 
@@ -30,9 +52,27 @@ naddiag2 = [zeros(J,1);-thetay*ones(J*K-J,1)];
 A = spdiags([naddiag1,obdiag1,diagonala,obdiag2,naddiag2],[-J,-1,0,1,J],J*K,J*K);
 
 vrednosti = F(X,Y);
+vrednosti = vrednosti(2:end-1,2:end-1);
 vrednosti = vrednosti';
-b = vrednosti(:);
+B = vrednosti(:);
+B = deltakv*B;
 
+B(1:J) = B(1:J) - thetax*Gc(X(1,2:end-1))';
 
+B(end-J+1:end) =  B(end-J+1:end) - thetax*Gd(X(1,2:end-1))';
+
+B(1:J:end) = B(1:J:end) - thetay*Ga(Y(2:end-1,1));
+
+B(J:J:end) = B(J:J:end) - thetay*Gb(Y(2:end-1,1));
+res = -A\B;
+
+U1 = reshape(res,[J,K]);
+U(2:end-1,2:end-1) = U1;
+U = U';
+U(1,:) = Gc(X(1,:));
+U(end,:) = Gd(X(1,:));
+U(:,1) = Ga(Y(:,1));
+U(:,end) = Gb(Y(:,1));
+surf(X,Y,U);
 end
 
