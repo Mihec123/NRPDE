@@ -49,7 +49,11 @@ obdiag2(J+1:J:end) = 0;
 end
 naddiag1 = [-thetay*ones(J*K-J,1);zeros(J,1)];
 naddiag2 = [zeros(J,1);-thetay*ones(J*K-J,1)];
+if J >1
 A = spdiags([naddiag1,obdiag1,diagonala,obdiag2,naddiag2],[-J,-1,0,1,J],J*K,J*K);
+else
+    A = spdiags([naddiag1,diagonala,naddiag2],[-1,0,1],J*K,J*K);
+end
 
 vrednosti = F(X,Y);
 vrednosti = vrednosti(2:end-1,2:end-1);
