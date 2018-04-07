@@ -1,7 +1,25 @@
 function [y,x,S] = resiRobniProblem(a,b,p,q,r,alpha,beta,n)
-%resujemo enacbo -(p(x)y)' + q(x)y = r(x) z operatorejm iz vaj na x \in (a,b)
-%h = (b-a)/h;, kjer je y(a) = alpha,y(b) = beta iscemo za tocke 
-%i=1,...,n-1
+% Opis:
+%  resiRobniProblem uporabi diferencno metodo za izracun numericne resitve
+%  navadne diferencialne enacbe -(p(x) y')' + q(x) y = r(x) na intervalu
+%  (a,b) pri robnih pogojih y(a) = alpha in y(b) = beta
+%
+% Definicija:
+%  [y,x] = resiRobniProblem(a,b,p,q,r,alpha,beta,n)
+%
+% Vhodni podatki:
+%  a, b         robova intervala, na katerem resujemo enacbo,
+%  p, q, r      funkcije, ki nastopajo v enacbi,
+%  alpha, beta  robni vrednosti resitve,
+%  n            parameter, ki doloca na koliko podintervalov je razdeljen
+%               interval [a,b]
+%
+% Izhodna podatka:
+%  y            seznam dolzine n+1, ki predstavlja priblizek za resitev
+%               robnega problema v n+1 ekvidistantno razporejenih tockah na
+%               intervalu [a,b],
+%  x            seznam dolzine n+1, ki predstavlja ekvidistantno
+%               razporejene tocke na intervlau [a,b]
 %testni primer:
 % n = 4
 % p = @(x) 1+x.^2

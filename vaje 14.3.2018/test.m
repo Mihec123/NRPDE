@@ -24,3 +24,8 @@ tocnares = @(x,y) (x-y).^4;
 
 T = tocnares(X,Y);
 T1 = tocnares(X1,Y1);
+
+x = 0.5;
+y = 0.5;
+i = find(X(1,:) == 0.5);
+j = find(Y(:,1) == 0.5);

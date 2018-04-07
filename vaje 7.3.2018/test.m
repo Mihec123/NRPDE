@@ -1,0 +1,9 @@
+n = 5;
+p = @(x) 1+x.^2;
+q = @(x) x.^2;
+r=@(x)-1;
+alpha = -2;
+beta = 3;
+a = -1;
+b= 1;
+[y,x,S] = resiRobniProblem(a,b,p,q,r,alpha,beta,n)

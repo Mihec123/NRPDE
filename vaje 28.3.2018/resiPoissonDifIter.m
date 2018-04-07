@@ -37,15 +37,15 @@ napaka = 1;
 hx = (b-a)/(J+1);
 hy = (d-c)/(K+1);
 
-deltakv = hx^2*hy^2/(2*(hx^2 + hy^2))
-thetax = deltakv/hx^2
-thetay = deltakv/hy^2
+deltakv = hx^2*hy^2/(2*(hx^2 + hy^2));
+thetax = deltakv/hx^2;
+thetay = deltakv/hy^2;
 
 x = [a:hx:b];
 y = [c:hy:d];
 [X,Y] = meshgrid(x,y);
 
-f = F(X,Y)
+f = F(X,Y);
 U = U0(X,Y);
 U(end,:) = Gd(X(1,:));
 U(1,:) = Gc(X(1,:));
@@ -58,7 +58,7 @@ if M == 1
     for s= 1:S
         for vrstica = 2:K+1
             for stolpec = 2:J+1
-                U(vrstica,stolpec) = (thetay*Ustari(vrstica,stolpec-1) + thetax*Ustari(vrstica-1,stolpec) +thetay*Ustari(vrstica,stolpec+1) +thetax*Ustari(vrstica+1,stolpec) + deltakv*f(vrstica,stolpec))/4;
+                U(vrstica,stolpec) = (thetay*Ustari(vrstica,stolpec-1) + thetax*Ustari(vrstica-1,stolpec) +thetay*Ustari(vrstica,stolpec+1) +thetax*Ustari(vrstica+1,stolpec) - deltakv*f(vrstica,stolpec));
             end
         end
         napaka = max(max(abs(U-Ustari)));
@@ -73,7 +73,7 @@ else
         for s= 1:S
         for vrstica = 2:K+1
             for stolpec = 2:J+1
-                U(vrstica,stolpec) = (thetay*U(vrstica,stolpec-1) + thetax*U(vrstica-1,stolpec) +thetay*U(vrstica,stolpec+1) +thetax*U(vrstica+1,stolpec) + deltakv*f(vrstica,stolpec))/4;
+                U(vrstica,stolpec) = (thetay*U(vrstica,stolpec-1) + thetax*U(vrstica-1,stolpec) +thetay*U(vrstica,stolpec+1) +thetax*U(vrstica+1,stolpec) - deltakv*f(vrstica,stolpec));
             end
         end
         napaka = max(max(abs(U-Ustari)));
@@ -84,7 +84,7 @@ else
         end
 end
 
-
+surf(X,Y,U)
 
 end
 
