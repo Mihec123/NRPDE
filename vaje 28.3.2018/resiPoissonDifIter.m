@@ -1,4 +1,4 @@
-function [U,X,Y,s] = resiPoissonDifIter(a,b,c,d,F,Gc,Gd,Ga,Gb,J,K,U0,T,S,M)
+function [U,X,Y,s] = resiPoissonDifIter(a,b,c,d,F,Gc,Gd,Ga,Gb,J,K,U0,T,S,M,w)
 % Opis:
 %  resiPoissonDifIter z uporabo diferencne metode resi Poissonovo enacbo na
 %  pravokotniku pri Dirichletovih robnih pogojih, pri cemer se za racunanje
@@ -21,7 +21,9 @@ function [U,X,Y,s] = resiPoissonDifIter(a,b,c,d,F,Gc,Gd,Ga,Gb,J,K,U0,T,S,M)
 %           zaporednih priblizkov v iteraciji,
 %  S        maksimalno stevilo korakov iteracije,
 %  M        parameter, ki doloca iterativno metodo: 1 = Jacobijeva metoda,
-%           2 = Gauss-Seidlova metoda
+%           2 = Gauss-Seidlova metoda, 3 = SOR metoda
+%  w        Parameter SOR metode. Default nastavitev w = 1. Torej
+%           Gauss-Seidlova metoda.
 %
 % Izhodni podatki:
 %  U        tabela velikosti (K+2) x (J+2), ki predstavlja numericno
@@ -32,6 +34,10 @@ function [U,X,Y,s] = resiPoissonDifIter(a,b,c,d,F,Gc,Gd,Ga,Gb,J,K,U0,T,S,M)
 %           U(k,j) torej predstavlja numericni priblizek za resitev
 %           Poissonove enacbe v tocki (X(k,j), Y(k,j)),
 %  s        stevilo opravljenih korakov iteracije
+
+if nargin < 16
+    w = 1;
+end
 
 napaka = 1;
 hx = (b-a)/(J+1);
@@ -58,7 +64,8 @@ if M == 1
     for s= 1:S
         for vrstica = 2:K+1
             for stolpec = 2:J+1
-                U(vrstica,stolpec) = (thetay*Ustari(vrstica,stolpec-1) + thetax*Ustari(vrstica-1,stolpec) +thetay*Ustari(vrstica,stolpec+1) +thetax*Ustari(vrstica+1,stolpec) - deltakv*f(vrstica,stolpec));
+                U(vrstica,stolpec) = (thetay*Ustari(vrstica,stolpec-1) + thetax*Ustari(vrstica-1,stolpec)...
+                    + thetay*Ustari(vrstica,stolpec+1) +thetax*Ustari(vrstica+1,stolpec) - deltakv*f(vrstica,stolpec));
             end
         end
         napaka = max(max(abs(U-Ustari)));
@@ -67,13 +74,14 @@ if M == 1
         end
         Ustari = U;
     end
-else
+elseif M==2
     %Gauss seidel
     Ustari = U;
         for s= 1:S
         for vrstica = 2:K+1
             for stolpec = 2:J+1
-                U(vrstica,stolpec) = (thetay*U(vrstica,stolpec-1) + thetax*U(vrstica-1,stolpec) +thetay*U(vrstica,stolpec+1) +thetax*U(vrstica+1,stolpec) - deltakv*f(vrstica,stolpec));
+                U(vrstica,stolpec) = (thetay*U(vrstica,stolpec-1) + thetax*U(vrstica-1,stolpec) +thetay*U(vrstica,stolpec+1)...
+                    +thetax*U(vrstica+1,stolpec) - deltakv*f(vrstica,stolpec));
             end
         end
         napaka = max(max(abs(U-Ustari)));
@@ -82,6 +90,24 @@ else
         end
         Ustari = U;
         end
+else
+    %SOR
+        Ustari = U;
+        for s= 1:S
+        for vrstica = 2:K+1
+            for stolpec = 2:J+1
+                U(vrstica,stolpec) = w*(thetay*U(vrstica,stolpec-1) + thetax*U(vrstica-1,stolpec) +thetay*U(vrstica,stolpec+1)...
+                    + thetax*U(vrstica+1,stolpec) - deltakv*f(vrstica,stolpec)) + (1-w)*Ustari(vrstica,stolpec);
+            end
+        end
+        napaka = max(max(abs(U-Ustari)));
+        if napaka < T
+                    break;
+        end
+        Ustari = U;
+        end
+    
+    
 end
 
 surf(X,Y,U)
