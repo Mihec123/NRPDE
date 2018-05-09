@@ -37,7 +37,19 @@ for i = 1:n
     end
 end
 
-indeksi
+for i = 1:n
+    trikotnik = t.Triangulation(i,:)
+    for j = 1:3
+        for k = j:3
+            t1 = trikotnik(j);
+            t2 = tirkotnik(k);
+            if prod(ismember([t1,t2],robne))
+                % nobena ni notranja
+                
+        end
+    end
+end
+
 u = 1;
 
 end
