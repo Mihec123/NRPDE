@@ -1,0 +1,1 @@
+[ U,lam ] = resiToplotnoEksDif(1/2,@(x)f(x),@(x) 0.*x,@(x) 0.*x,1,0,1,1/100,1/10)
