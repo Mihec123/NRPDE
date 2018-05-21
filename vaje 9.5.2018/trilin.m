@@ -33,15 +33,12 @@ A(:,3) = T(:,2);
 u = A\t;
 
 if odvod == 0
-    z = zeros(1,length(x));
-    for i = 1:length(x)
-        z(i) = u(1) + u(2)*x(i) + u(3)*y(i);
-    end
+    z = u(1) + u(2).*x + u(3).*y;
 else
     if o == 'x'
-        z = u(2) * ones(1,length(x));
+        z = u(2) + 0.*x;
     elseif o == 'y'
-        z = u(3) * ones(1,length(x));
+        z = u(3) + 0.*x;
     end
 end
     

@@ -20,7 +20,7 @@ function IfT = triintegral(f,T)
 
 detJmat = abs(det([T(1,1)-T(3,1), T(1,2)-T(3,2); T(2,1)-T(3,1), T(2,2)-T(3,2)]));
 
-fn = @(u,v) f(u*T(1,1)+v*T(2,1)+(1-u-v)*T(3,1),u*T(1,2)+v*T(2,2)+(1-u-v)*T(3,2)) * detJmat; 
+fn = @(u,v) f(T(1,1).*u+T(2,1).*v+T(3,1).*(1-u-v),T(1,2).*u+T(2,2).*v+T(3,2).*(1-u-v)) .* detJmat; 
 
 IfT = integral2(fn,0,1,0,@(u)1-u);
 
