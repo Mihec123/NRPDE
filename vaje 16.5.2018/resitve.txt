@@ -1,0 +1,50 @@
+PRIMER 1 (nicelni robni pogoji)
+ razmik v casovni smeri: 0.01
+ razmik v prostorski smeri: 0.1
+ Courantovo stevilo: 0.25
+ vrednosti vzdolz (0,1) pri T = 1:
+                   0
+   0.021199854970203
+   0.040324520433247
+   0.055501940885177
+   0.065246444660567
+   0.068604171829948
+   0.065246444660567
+   0.055501940885177
+   0.040324520433247
+   0.021199854970203
+                   0
+
+PRIMER 2 (nicelni robni pogoji)
+ razmik v casovni smeri: 0.021
+ razmik v prostorski smeri: 0.1
+ Courantovo stevilo: 0.525
+ vrednosti vzdolz (0,1) pri T = 1:
+                   0
+  -0.037811092788243
+   0.152407181060054
+  -0.098990726320943
+   0.246599999379185
+  -0.122359267065401
+   0.246599999379185
+  -0.098990726320943
+   0.152407181060054
+  -0.037811092788243
+                   0
+
+PRIMER 3 (linearni robni pogoji)
+ razmik v casovni smeri: 0.01
+ razmik v prostorski smeri: 0.1
+ Courantovo stevilo: 0.25
+ vrednosti vzdolz (0,1) pri T = 1:
+   1.000000000000000
+   0.854584916619255
+   0.745784420636873
+   0.670544487220645
+   0.626441428536381
+   0.611919141202781
+   0.626441428536381
+   0.670544487220645
+   0.745784420636873
+   0.854584916619255
+   1.000000000000000
