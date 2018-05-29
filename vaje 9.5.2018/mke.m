@@ -1,4 +1,4 @@
-function u = mke(p,q,r,f,t,g)
+function [u,A,b] = mke(p,q,r,f,t,g)
 % Opis:
 %  mke izracuna priblizek za resitev parcialne diferencialne enacbe
 %   - d/dx (p(x,y) du/dx) - d/dy (q(x,y) du/dy) + r(x,y) u = f(x,y)
@@ -38,24 +38,27 @@ end
 m = sum(not(indeksi == 0));
 A = zeros(m);
 b = zeros(m,1);
-for i = 1:n
+for i = 1:length(t.Triangulation)
     trikotnik = t.Triangulation(i,:);
     for j = 1:3
         for k = j:3
             t1 = trikotnik(j);
             t2 = trikotnik(k);
-            if indeksi(t1) || indeksi(t2)
+            if (indeksi(t1) || indeksi(t2))
                 % vsaj ena notranja
-                T = [t.X(trikotnik(1),:);t.X(trikotnik(2),:);t.X(trikotnik(3),:)];
                 vr1 = (trikotnik == t1)';
                 vr2 = (trikotnik == t2)';
+                T = [t.X(trikotnik(1),:);t.X(trikotnik(2),:);t.X(trikotnik(3),:)];
+                
                 if indeksi(t1) && indeksi(t2)
                     %obe notranji
+                    
                     fn = @(x,y) p(x,y).*trilin(T,vr1,x,y,'x').*trilin(T,vr2,x,y,'x') +...
                         q(x,y).*trilin(T,vr1,x,y,'y').*trilin(T,vr2,x,y,'y') +...
                         r(x,y).*trilin(T,vr1,x,y).*trilin(T,vr2,x,y);
                     temp = triintegral(fn,T);
                     if t1 == t2
+                        
                         A(indeksi(t1),indeksi(t2)) = A(indeksi(t1),indeksi(t2))+ temp;
                     else
                         A(indeksi(t1),indeksi(t2)) = A(indeksi(t1),indeksi(t2)) + temp;
@@ -70,20 +73,14 @@ for i = 1:n
                             (p(x,y).* g(t.X(t2,1),t.X(t2,2)).*trilin(T,vr2,x,y,'x').*trilin(T,vr1,x,y,'x') +...
                             q(x,y).*trilin(T,vr1,x,y,'y').*g(t.X(t2,1),t.X(t2,2)).*trilin(T,vr2,x,y,'y')+...
                             r(x,y).*g(t.X(t2,1),t.X(t2,2)).*trilin(T,vr2,x,y).*trilin(T,vr1,x,y));
-                        t1
-                        t2
-                        temp = triintegral(fn,T)
+                        temp = triintegral(fn,T);
                         b(indeksi(t1)) = b(indeksi(t1)) + temp;
                     else
-                        fi2odvx = @(x,y) trilin(T,vr2,x,y,'x');
-                        fi1odvx = @(x,y) g(t.X(t2,1),t.X(t2,2)).*trilin(T,vr1,x,y,'x');
-                        fi2odvy = @(x,y) trilin(T,vr2,x,y,'y');
-                        fi1odvy = @(x,y) g(t.X(t2,1),t.X(t2,2)).*trilin(T,vr1,x,y,'y');
-                        fi2 = @(x,y) trilin(T,vr2,x,y);
-                        fi1 = @(x,y) g(t.X(t2,1),t.X(t2,2)).*trilin(T,vr1,x,y);
-                        fn = @(x,y) f(x,y).*fi2(x,y)-(p(x,y).* fi2odvx(x,y).*fi1odvx(x,y) +...
-                            q(x,y).*fi1odvy(x,y).*fi2odvy(x,y)+ r(x,y).*fi2(x,y).*fi1(x,y));
-                        temp = triintegral(fn,T)
+                        fn = @(x,y) f(x,y).*trilin(T,vr2,x,y)-...
+                            (p(x,y).* g(t.X(t1,1),t.X(t1,2)).*trilin(T,vr2,x,y,'x').*trilin(T,vr1,x,y,'x') +...
+                            q(x,y).*trilin(T,vr1,x,y,'y').*g(t.X(t1,1),t.X(t1,2)).*trilin(T,vr2,x,y,'y')+...
+                            r(x,y).*g(t.X(t1,1),t.X(t1,2)).*trilin(T,vr2,x,y).*trilin(T,vr1,x,y));
+                        temp = triintegral(fn,T);
                         b(indeksi(t2)) = b(indeksi(t2)) + temp;
                     end
                 end
@@ -97,9 +94,6 @@ end
 %b = [5/24;5/24];
 alfa = A\b;
 z = zeros(n,1);
-A
-b
-alfa
 for i = 1:length(robne)
     z(robne(i)) = g(t.X(robne(i),1),t.X(robne(i),2));
 end
