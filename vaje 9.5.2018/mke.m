@@ -58,6 +58,9 @@ for i = 1:length(t.Triangulation)
                         r(x,y).*trilin(T,vr1,x,y).*trilin(T,vr2,x,y);
                     temp = triintegral(fn,T);
                     if t1 == t2
+                        fn1 = @(x,y) f(x,y).*trilin(T,vr1,x,y);
+                        temp1 = triintegral(fn1,T);
+                        b(indeksi(t1)) = b(indeksi(t1)) + temp1;
                         
                         A(indeksi(t1),indeksi(t2)) = A(indeksi(t1),indeksi(t2))+ temp;
                     else
@@ -69,15 +72,13 @@ for i = 1:length(t.Triangulation)
                     %natanko ena notranja tocka
                     if not (indeksi(t1) == 0)
                         %t1 je notranaj
-                        fn = @(x,y) f(x,y).*trilin(T,vr1,x,y)-...
-                            (p(x,y).* g(t.X(t2,1),t.X(t2,2)).*trilin(T,vr2,x,y,'x').*trilin(T,vr1,x,y,'x') +...
+                        fn = @(x,y) -(p(x,y).* g(t.X(t2,1),t.X(t2,2)).*trilin(T,vr2,x,y,'x').*trilin(T,vr1,x,y,'x') +...
                             q(x,y).*trilin(T,vr1,x,y,'y').*g(t.X(t2,1),t.X(t2,2)).*trilin(T,vr2,x,y,'y')+...
                             r(x,y).*g(t.X(t2,1),t.X(t2,2)).*trilin(T,vr2,x,y).*trilin(T,vr1,x,y));
                         temp = triintegral(fn,T);
                         b(indeksi(t1)) = b(indeksi(t1)) + temp;
                     else
-                        fn = @(x,y) f(x,y).*trilin(T,vr2,x,y)-...
-                            (p(x,y).* g(t.X(t1,1),t.X(t1,2)).*trilin(T,vr2,x,y,'x').*trilin(T,vr1,x,y,'x') +...
+                        fn = @(x,y)-(p(x,y).* g(t.X(t1,1),t.X(t1,2)).*trilin(T,vr2,x,y,'x').*trilin(T,vr1,x,y,'x') +...
                             q(x,y).*trilin(T,vr1,x,y,'y').*g(t.X(t1,1),t.X(t1,2)).*trilin(T,vr2,x,y,'y')+...
                             r(x,y).*g(t.X(t1,1),t.X(t1,2)).*trilin(T,vr2,x,y).*trilin(T,vr1,x,y));
                         temp = triintegral(fn,T);
