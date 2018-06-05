@@ -25,7 +25,7 @@ function [ U,lam ] = resiToplotnoEksDif(c,f,g,h,T,a,b,dt,dx)
 
 lam = c^2*dt/dx^2
 J = (b-a)/dx+1
-N = floor(T/dt+1)
+N = floor(T/dt)+1
 U = zeros(N,J);
 robna1 = zeros(N,1);
 robna2 = zeros(N,1);

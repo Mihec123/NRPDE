@@ -1,12 +1,12 @@
 function [ U,lam ] = resiToplotnoDif(c,f,g,h,T,a,b,dt,dx,th)
 % Opis:
-%  resiToplotnoEksDif izracuna resitev toplotne enacbe
-%  du/dt = c^2 du^2/dx^2 z zacetnim pogojem u(0,x) = f(x) ter robnima
-%  pogojema u(t,a) = g(t) in u(t,b) = h(t) z uporabo eksplicitne diferencne
-%  sheme pri predpisani diskretizaciji
+%  resiToplotnoDif izracuna resitev toplotne enacbe du/dt = c^2 du^2/dx^2 z
+%  zacetnim pogojem u(0,x) = f(x) ter robnima pogojema u(t,a) = g(t) in
+%  u(t,b) = h(t) z uporabo utezene diferencne sheme pri predpisani
+%  diskretizaciji
 %
 % Definicija:
-%  [U,lam] = resiToplotnoEksDif(c,f,g,h,T,a,b,dt,dx)
+%  [U,lam] = resiToplotnoDif(c,f,g,h,T,a,b,dt,dx,th)
 %
 % Vhodni podatki:
 %  c        parameter, ki doloca enacbo,
@@ -14,8 +14,8 @@ function [ U,lam ] = resiToplotnoDif(c,f,g,h,T,a,b,dt,dx,th)
 %  g,h      funkciji, ki dolocata robni pogoj,
 %  T        maksimalni cas,
 %  a,b      parametra, ki omejujeta prostorsko spremenljivko,
-%  dt,dx    razmik diskretizacije v casovni in prostorski smeri
-%  th       parameter ustrezne diferencne sheme (0 = eksplicitna shema, 1=
+%  dt,dx    razmik diskretizacije v casovni in prostorski smeri,
+%  th       parameter utezene diferencne sheme (0 = eksplicitna shema, 1 =
 %           implicitna shema, 1/2 = Crank-Nicolsonova shema)
 %
 % Izhodna podatka:
@@ -23,7 +23,7 @@ function [ U,lam ] = resiToplotnoDif(c,f,g,h,T,a,b,dt,dx,th)
 %           casih med 0 in T z razmikom dt ter polozajih med a in b z
 %           razmikom dx; natancneje, element na mestu (n,j) predstavlja
 %           priblizek pri casu (n-1)*dt in polozaju a+(j-1)*dx,
-%  lam      Courantovo stevilo problema
+%  lam      "Courantovo stevilo" problema (c^2*dt/dx^2)
 
 
 
